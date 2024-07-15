@@ -34,12 +34,20 @@
     text-align: center;
     font-size: 12px;
   }
+  .load-more-btn {
+    text-align: center;
+    margin-top: 20px;
+  }
 </style>
 </head>
 <body>
 
 <div class="image-grid" id="imageGrid">
   <!-- Các phần tử ảnh sẽ được thêm vào đây bằng JavaScript -->
+</div>
+
+<div class="load-more-btn">
+  <button id="loadMoreBtn">Xem thêm</button>
 </div>
 
 <script>
@@ -683,31 +691,52 @@ document.addEventListener('DOMContentLoaded', function() {
 { filename: "pictures/WP_20170206_08_56_54_Pro.jpg", createdDate: "2017-02-06" },
 { filename: "pictures/WP_20170206_08_57_33_Pro.jpg", createdDate: "2017-02-06" },
 ];
-
-  // Sắp xếp mảng images theo ngày tạo từ lâu nhất đến gần nhất
-  images.sort((a, b) => {
+ // Sắp xếp mảng images theo ngày tạo từ lâu nhất đến gần nhất
+ images.sort((a, b) => {
     if (a.createdDate === "Unknown") return 1; // Đưa phần tử Unknown xuống cuối
     if (b.createdDate === "Unknown") return -1;
     return new Date(b.createdDate) - new Date(a.createdDate);
   });
 
   const imageGrid = document.getElementById('imageGrid');
+  const loadMoreBtn = document.getElementById('loadMoreBtn');
+  let displayedImages = 0;
+  const imagesPerLoad = 10;
 
-  images.forEach(image => {
-    const imageItem = document.createElement('div');
-    imageItem.classList.add('image-item');
+  function displayImages() {
+    const imagesToShow = images.slice(displayedImages, displayedImages + imagesPerLoad);
 
-    const img = document.createElement('img');
-    img.src = image.filename;
-    img.alt = 'Photo';
-    imageItem.appendChild(img);
+    imagesToShow.forEach(image => {
+      const imageItem = document.createElement('div');
+      imageItem.classList.add('image-item');
 
-    const dateOverlay = document.createElement('div');
-    dateOverlay.classList.add('date-overlay');
-    dateOverlay.textContent = image.createdDate;
-    imageItem.appendChild(dateOverlay);
+      const img = document.createElement('img');
+      img.src = image.filename;
+      img.alt = 'Photo';
+      imageItem.appendChild(img);
 
-    imageGrid.appendChild(imageItem);
+      const dateOverlay = document.createElement('div');
+      dateOverlay.classList.add('date-overlay');
+      dateOverlay.textContent = image.createdDate;
+      imageItem.appendChild(dateOverlay);
+
+      imageGrid.appendChild(imageItem);
+    });
+
+    displayedImages += imagesToShow.length;
+
+    // Ẩn nút "Xem thêm" nếu đã hiển thị hết ảnh
+    if (displayedImages >= images.length) {
+      loadMoreBtn.style.display = 'none';
+    }
+  }
+
+  // Hiển thị 10 ảnh đầu tiên ban đầu
+  displayImages();
+
+  // Xử lý sự kiện khi bấm nút "Xem thêm"
+  loadMoreBtn.addEventListener('click', function() {
+    displayImages();
   });
 });
 </script>
