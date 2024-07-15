@@ -4,50 +4,66 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Image Gallery</title>
+<!-- Thêm liên kết đến Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <style>
+  body{
+    background-color: rgb(252, 247, 248);
+  }
   /* CSS để hiển thị ảnh trong grid */
   .image-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 10px;
+    display: flex;
+    justify-content: center;
     padding: 20px;
   }
   .image-item {
     position: relative;
     overflow: hidden;
     border: 1px solid #ddd;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 600px; /* Đặt giới hạn chiều rộng tối đa cho ảnh */
+    border-radius: 30px;
   }
   .image-item img {
     display: block;
     width: 100%;
     height: auto;
-  }
-  .image-item .date-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    color: #fff;
-    padding: 5px;
-    text-align: center;
-    font-size: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 30px;
   }
   .load-more-btn {
     text-align: center;
     margin-top: 20px;
+  }
+  .heart-btn {
+    background: pink;
+    border: pink;
+    padding: 10px 30px;
+    padding-top: 13px;
+    color: #e74c3c;
+    font-size: 40px;
+    cursor: pointer;
+    border-radius: 30px;
+ }
+  .heart-btn:focus {
+    outline: none;
+  }
+  @media (max-width: 600px) {
+    .image-item {
+      max-width: 100%;
+    }
   }
 </style>
 </head>
 <body>
 
 <div class="image-grid" id="imageGrid">
-  <!-- Các phần tử ảnh sẽ được thêm vào đây bằng JavaScript -->
+  <!-- Phần tử ảnh sẽ được thêm vào đây bằng JavaScript -->
 </div>
 
 <div class="load-more-btn">
-  <button id="loadMoreBtn">Xem thêm</button>
+  <button id="randomBtn" class="heart-btn"> <i class="fas fa-heart"></i></button>
 </div>
 
 <script>
@@ -699,44 +715,35 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   const imageGrid = document.getElementById('imageGrid');
-  const loadMoreBtn = document.getElementById('loadMoreBtn');
-  let displayedImages = 0;
-  const imagesPerLoad = 5;
+  const randomBtn = document.getElementById('randomBtn');
 
-  function displayImages() {
-    const imagesToShow = images.slice(displayedImages, displayedImages + imagesPerLoad);
+  function displayRandomImage() {
+    // Xóa ảnh cũ
+    imageGrid.innerHTML = '';
 
-    imagesToShow.forEach(image => {
-      const imageItem = document.createElement('div');
-      imageItem.classList.add('image-item');
+    // Chọn ngẫu nhiên một ảnh
+    const randomIndex = Math.floor(Math.random() * images.length);
+    const image = images[randomIndex];
 
-      const img = document.createElement('img');
-      img.src = image.filename;
-      img.alt = 'Photo';
-      imageItem.appendChild(img);
+    const imageItem = document.createElement('div');
+    imageItem.classList.add('image-item');
 
-      const dateOverlay = document.createElement('div');
-      dateOverlay.classList.add('date-overlay');
-      dateOverlay.textContent = image.createdDate;
-      imageItem.appendChild(dateOverlay);
+    const img = document.createElement('img');
+    img.src = image.filename;
+    img.alt = 'Photo';
+    imageItem.appendChild(img);
 
-      imageGrid.appendChild(imageItem);
-    });
 
-    displayedImages += imagesToShow.length;
 
-    // Ẩn nút "Xem thêm" nếu đã hiển thị hết ảnh
-    if (displayedImages >= images.length) {
-      loadMoreBtn.style.display = 'none';
-    }
+    imageGrid.appendChild(imageItem);
   }
 
-  // Hiển thị 10 ảnh đầu tiên ban đầu
-  displayImages();
+  // Hiển thị một ảnh ngẫu nhiên khi trang tải
+  displayRandomImage();
 
-  // Xử lý sự kiện khi bấm nút "Xem thêm"
-  loadMoreBtn.addEventListener('click', function() {
-    displayImages();
+  // Xử lý sự kiện khi bấm nút "Random"
+  randomBtn.addEventListener('click', function() {
+    displayRandomImage();
   });
 });
 </script>
