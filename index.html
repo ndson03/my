@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Image Gallery</title>
+<title>My</title>
 <!-- Thêm liên kết đến Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <style>
@@ -65,8 +65,17 @@
 <div class="load-more-btn">
   <button id="randomBtn" class="heart-btn"> <i class="fas fa-heart"></i></button>
 </div>
+<iframe src="silence.mp3" allow="autoplay" id="audio" style="display: none"></iframe>
+<audio id="player" autoplay loop>
+  <source src="music.mp3" type="audio/mp3">
+</audio>
 
 <script>
+  document.addEventListener('click', musicPlay);
+function musicPlay() {
+    document.getElementById('player').play();
+    document.removeEventListener('click', musicPlay);
+}
 document.addEventListener('DOMContentLoaded', function() {
   const images = [
 { filename: "pictures/20190420_175449.jpg", createdDate: "2019-04-20" },
